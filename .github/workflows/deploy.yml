@@ -22,4 +22,4 @@ jobs:
         REMOTE_HOST: ${{ secrets.FTP_HOST }}
         REMOTE_USER: ${{ secrets.FTP_USER }}
         REMOTE_PORT: ${{ secrets.FTP_PORT }}
-        TARGET: ./public_html/biblioteca
+        TARGET: ./public_html
