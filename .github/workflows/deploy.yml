@@ -1,0 +1,25 @@
+name: 🚀 Deploy website on push
+
+on:
+    push:
+        branches:
+            - main
+    
+    workflow_dispatch:
+        
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: Repo Checkout
+      uses: actions/checkout@v1
+    - name: Hostinger Deploy
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        ARGS: "-rlgoDzvc --delete"
+        REMOTE_HOST: ${{ secrets.FTP_HOST }}
+        REMOTE_USER: ${{ secrets.FTP_USER }}
+        REMOTE_PORT: ${{ secrets.FTP_PORT }}
+        TARGET: ./public_html/biblioteca
