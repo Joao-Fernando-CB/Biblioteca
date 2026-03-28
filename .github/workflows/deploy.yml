@@ -18,7 +18,7 @@ jobs:
       run: |
         echo "$SSH_PRIVATE_KEY" > key
         chmod 600 key
-        ssh -i key -o StrictHostKeyChecking=no -v u223524996@45.152.46.80
+        ssh -i key -o StrictHostKeyChecking=no -v -p 65002 u223524996@45.152.46.80 
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
     - name: Hostinger Deploy
