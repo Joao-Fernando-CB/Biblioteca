@@ -23,3 +23,11 @@ jobs:
         REMOTE_USER: ${{ secrets.FTP_USER }}
         REMOTE_PORT: ${{ secrets.FTP_PORT }}
         TARGET: ./public_html
+
+    - name: Debug SSH
+      run: |
+        echo "$SSH_PRIVATE_KEY" > key
+        chmod 600 key
+        ssh -i key -o StrictHostKeyChecking=no -v u223524996@45.152.46.80
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
