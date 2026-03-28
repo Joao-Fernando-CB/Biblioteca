@@ -9,19 +9,24 @@ on:
         
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
-    steps:
-    - name: Repo Checkout
-      uses: actions/checkout@v1
-    - name: Hostinger Deploy
-      uses: easingthemes/ssh-deploy@main
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
-        ARGS: "-rlgoDzvc --delete"
-        REMOTE_HOST: ${{ secrets.FTP_HOST }}
-        REMOTE_USER: ${{ secrets.FTP_USER }}
-        REMOTE_PORT: ${{ secrets.FTP_PORT }}
-        TARGET: ./public_html
 
-    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/bib
+          chmod 600 ~/.ssh/bib
+
+      - name: Test SSH
+        run: |
+          ssh -i ~/.ssh/bib -o StrictHostKeyChecking=no -p ${{ secrets.FTP_PORT }} ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }} "echo conectado"
+
+      - name: Deploy via rsync
+        run: |
+          rsync -rlgoDzvc --delete \
+          -e "ssh -i ~/.ssh/bib -p ${{ secrets.FTP_PORT }} -o StrictHostKeyChecking=no" \
+          ./ ${{ secrets.FTP_USER }}@${{ secrets.FTP_HOST }}:./public_html/biblioteca
